@@ -17,9 +17,9 @@ import java.util.List;
 public class ComissaoVendaDAO extends DataBaseConnection {
     
     private static final String SQL_INSERT = " INSERT INTO comissao_venda(data, valor_venda, porcentagem_venda,"
-            + "valor_comissao, id_funcionario)VALUES (?, ?, ?, ?, ?) ";
+            + "valor_comissao, id_funcionario, taxa_cartao)VALUES (?, ?, ?, ?, ?, ?) ";
     private static final String SQL_UPDATE = " UPDATE comissao_venda SET data=?, valor_venda=?, porcentagem_venda=?,"
-            + "valor_comissao=?, id_funcionario=? WHERE id_comissao_venda = ? ";
+            + "valor_comissao=?, id_funcionario=?, taxa_cartao=? WHERE id_comissao_venda = ? ";
     private static final String SQL_DELETE = " DELETE FROM comissao_venda WHERE id_comissao_venda=? ";
     private static final String SQL_SELECT_ALL = " SELECT * FROM comissao_venda ";
     
@@ -39,6 +39,7 @@ public class ComissaoVendaDAO extends DataBaseConnection {
             ps.setDouble(3, cv.getPorcentagem_venda());
             ps.setDouble(4, cv.getValor_comissao());
             ps.setLong(5, cv.getId_funcionario());
+            ps.setDouble(6, cv.getTaxa_cartao());
             ps.executeUpdate();
         } catch (SQLException ex) {
             throw new ApplicationException("Incluir Comissão de Venda a" + ex.getMessage());
@@ -62,7 +63,8 @@ public class ComissaoVendaDAO extends DataBaseConnection {
             ps.setDouble(3, cv.getPorcentagem_venda());
             ps.setDouble(4, cv.getValor_comissao());
             ps.setLong(5, cv.getId_funcionario());
-            ps.setLong(6, cv.getId_comissao_venda());
+            ps.setDouble(6, cv.getTaxa_cartao());
+            ps.setLong(7, cv.getId_comissao_venda());
             ps.executeUpdate();
         } catch (SQLException ex) {
             throw new ApplicationException("Alterar Comissão de Venda " + ex.getMessage());
@@ -103,6 +105,7 @@ public class ComissaoVendaDAO extends DataBaseConnection {
                 cv.setPorcentagem_venda(rs.getDouble("porcentagem_venda"));
                 cv.setValor_comissao(rs.getDouble("valor_comissao"));
                 cv.setId_funcionario(rs.getLong("id_funcionario"));
+                cv.setTaxa_cartao(rs.getDouble("taxa_cartao"));
                 lista.add(cv);
             }
         } catch (SQLException ex) {

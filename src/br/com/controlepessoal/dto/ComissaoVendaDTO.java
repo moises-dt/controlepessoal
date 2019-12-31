@@ -14,19 +14,23 @@ public class ComissaoVendaDTO {
     private Double porcentagem_venda;
     private Double valor_comissao;
     private Long id_funcionario;
+    private Double taxa_cartao;
 
     public ComissaoVendaDTO(){
     }
 
-    public ComissaoVendaDTO(Long id_comissao_venda, Date data, Double valor_venda, Double porcentagem_venda, Double valor_comissao, Long id_funcionario) {
+    public ComissaoVendaDTO(Long id_comissao_venda, Date data, Double valor_venda,
+            Double porcentagem_venda, Double valor_comissao, Long id_funcionario,
+            Double taxa_cartao) {
         this.id_comissao_venda = id_comissao_venda;
         this.data = data;
         this.valor_venda = valor_venda;
         this.porcentagem_venda = porcentagem_venda;
         this.valor_comissao = valor_comissao;
         this.id_funcionario = id_funcionario;
+        this.taxa_cartao = taxa_cartao;
     }
-    
+
     public Long getId_comissao_venda() {
         return id_comissao_venda;
     }
@@ -75,6 +79,15 @@ public class ComissaoVendaDTO {
         this.id_funcionario = id_funcionario;
     }
 
+    public Double getTaxa_cartao() {
+        return taxa_cartao;
+    }
+
+    public void setTaxa_cartao(Double taxa_cartao) {
+        this.taxa_cartao = taxa_cartao;
+    }
+
+    
     @Override
     public String toString() {
         return "ComissaoVendaDTO{"
@@ -83,6 +96,7 @@ public class ComissaoVendaDTO {
                 + "valor_venda=" + valor_venda + ","
                 + "porcentagem_venda=" + porcentagem_venda + ","
                 + "valor_comissao=" + valor_comissao + ","
-                + "id_funcionario=" + id_funcionario + '}';
+                + "id_funcionario=" + id_funcionario + ","
+                + "taxa_cartao=" + taxa_cartao + '}';
     }
 }
