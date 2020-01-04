@@ -24,7 +24,7 @@ public class FuncionarioDAO  extends DataBaseConnection {
             + " WHERE id_funcionario=? ";
     private static final String SQL_DELETE = " DELETE FROM funcionario WHERE id_funcionario=? ";
     private static final String SQL_SELECT_ALL = " SELECT * FROM funcionario ";
-    
+    private static final String SQL_SELECT_NOME = " SELECT * FROM funcionario WHERE nome=? ";
     
     public void incluir(FuncionarioDTO f) throws ApplicationException {
         Connection con = null;
@@ -143,6 +143,32 @@ public class FuncionarioDAO  extends DataBaseConnection {
         try {
             con = getConnection();
             ps = con.prepareStatement(SQL_SELECT_ALL);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                FuncionarioDTO f = new FuncionarioDTO();
+                f.setId_funcionario(rs.getLong("id_funcionario"));
+                f.setNome(rs.getString("nome"));
+                lista.add(f);
+            }
+        } catch (SQLException ex) {
+            throw new ApplicationException("Listar de Funcionários Cadastrados Nome para Preencher Combo Box" + ex.getMessage());
+        } finally {
+            close(con, ps, rs);
+        }
+        return lista;
+    }
+    
+    public List<FuncionarioDTO> buscaNome(String nome) throws ApplicationException {
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        List<FuncionarioDTO> lista = new ArrayList<FuncionarioDTO>();
+                
+        try {
+            con = getConnection();
+            ps = con.prepareStatement(SQL_SELECT_NOME);
+            ps.setString(1, nome);
             rs = ps.executeQuery();
             while (rs.next()) {
                 FuncionarioDTO f = new FuncionarioDTO();

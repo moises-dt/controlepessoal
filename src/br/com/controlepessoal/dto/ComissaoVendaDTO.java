@@ -15,13 +15,14 @@ public class ComissaoVendaDTO {
     private Double valor_comissao;
     private Long id_funcionario;
     private Double taxa_cartao;
+    private String nome;
 
     public ComissaoVendaDTO(){
     }
 
     public ComissaoVendaDTO(Long id_comissao_venda, Date data, Double valor_venda,
             Double porcentagem_venda, Double valor_comissao, Long id_funcionario,
-            Double taxa_cartao) {
+            Double taxa_cartao, String nome) {
         this.id_comissao_venda = id_comissao_venda;
         this.data = data;
         this.valor_venda = valor_venda;
@@ -29,6 +30,7 @@ public class ComissaoVendaDTO {
         this.valor_comissao = valor_comissao;
         this.id_funcionario = id_funcionario;
         this.taxa_cartao = taxa_cartao;
+        this.nome = nome;
     }
 
     public Long getId_comissao_venda() {
@@ -87,6 +89,14 @@ public class ComissaoVendaDTO {
         this.taxa_cartao = taxa_cartao;
     }
 
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     
     @Override
     public String toString() {
@@ -97,6 +107,7 @@ public class ComissaoVendaDTO {
                 + "porcentagem_venda=" + porcentagem_venda + ","
                 + "valor_comissao=" + valor_comissao + ","
                 + "id_funcionario=" + id_funcionario + ","
-                + "taxa_cartao=" + taxa_cartao + '}';
+                + "taxa_cartao=" + taxa_cartao + ","
+                + "nome=" + nome + '}';
     }
 }

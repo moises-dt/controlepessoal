@@ -6,12 +6,11 @@ import br.com.controlepessoal.exception.ApplicationException;
 import br.com.controlepessoal.service.ComissaoVendaService;
 import br.com.controlepessoal.service.FuncionarioService;
 import br.com.controlepessoal.util.Calculos;
+import br.com.controlepessoal.util.Conversor;
 import br.com.controlepessoal.util.Formatar;
+import java.sql.Date;
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -27,7 +26,9 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
     private List<FuncionarioDTO> funcionarios = null;
     private Calculos calculo = new Calculos();
     private Formatar formata = new Formatar();
+    private Conversor converte = new Conversor();
     DefaultTableModel modelo = new DefaultTableModel();
+    Long id_funcionario = 0l;
     
     
     /**
@@ -35,9 +36,9 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
      */
     public ComissaoVendaGUI() {
         initComponents();
-        carregarTabelaComissaoVenda();
         carregarListaComboBoxFuncionario();
         dccData.setDate(Date.from(Instant.now()));
+        carregarTabelaComissaoVenda();
     }
 
     /**
@@ -65,12 +66,14 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         jLabel7 = new javax.swing.JLabel();
         txtTaxaCartao = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btAdicionarAlterar = new javax.swing.JButton();
+        btExcluir = new javax.swing.JButton();
         btCancelarLimpar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblComissaoVenda = new javax.swing.JTable();
+        jLabel8 = new javax.swing.JLabel();
+        txtValorTotal = new javax.swing.JTextField();
 
         setClosable(true);
 
@@ -93,7 +96,7 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         jLabel4.setText("Porcentagem Comissão:");
 
         txtPorcentagemVenda.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtPorcentagemVenda.setText("2.0");
+        txtPorcentagemVenda.setText("2.5");
         txtPorcentagemVenda.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 txtPorcentagemVendaFocusLost(evt);
@@ -190,14 +193,19 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Adicionar / Alterar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btAdicionarAlterar.setText("Adicionar / Alterar");
+        btAdicionarAlterar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btAdicionarAlterarActionPerformed(evt);
             }
         });
 
-        jButton2.setText("Excluir");
+        btExcluir.setText("Excluir");
+        btExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btExcluirActionPerformed(evt);
+            }
+        });
 
         btCancelarLimpar.setText("Cancelar / Limpar");
         btCancelarLimpar.addActionListener(new java.awt.event.ActionListener() {
@@ -214,17 +222,17 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btCancelarLimpar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btAdicionarAlterar, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                    .addComponent(btExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btAdicionarAlterar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btCancelarLimpar, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(29, Short.MAX_VALUE))
@@ -246,23 +254,42 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
                 return canEdit [columnIndex];
             }
         });
+        tblComissaoVenda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblComissaoVendaMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblComissaoVenda);
         if (tblComissaoVenda.getColumnModel().getColumnCount() > 0) {
             tblComissaoVenda.getColumnModel().getColumn(0).setMaxWidth(100);
             tblComissaoVenda.getColumnModel().getColumn(5).setMinWidth(300);
         }
 
+        jLabel8.setText("TOTAL DE COMISSÔES");
+
+        txtValorTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 931, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(36, 36, 36)
+                .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(txtValorTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 11, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -288,15 +315,37 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try {
-            capturarInformcaoes();
-            cvSER.incluir(cvDTO);
-            carregarTabelaComissaoVenda();
-        } catch (ApplicationException ex) {
-            ex.printStackTrace();
+    private void btAdicionarAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdicionarAlterarActionPerformed
+        if(txtIdComissaoVenda.getText().trim().equals("")){
+            try {
+                capturarInformcaoes();
+                if(!id_funcionario.equals(0l)){
+                    cvSER.incluir(cvDTO);
+                    carregarTabelaComissaoVenda();
+                    calculoTotal(converte.utilSql(dccData.getDate()));
+                }else{
+                    JOptionPane.showMessageDialog(this, "Selecione o Funcionário");
+                }
+                
+            } catch (ApplicationException ex) {
+                ex.printStackTrace();
+            }
+        }else{
+            try {
+                capturarInformcaoes();
+                if(!id_funcionario.equals(0l)){
+                    cvSER.alterar(cvDTO);
+                    carregarTabelaComissaoVenda();
+                    calculoTotal(converte.utilSql(dccData.getDate()));
+                }else{
+                    JOptionPane.showMessageDialog(this, "Selecione o Funcionário");
+                }
+                
+            } catch (ApplicationException ex) {
+                ex.printStackTrace();
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btAdicionarAlterarActionPerformed
 
     private void carregarListaComboBoxFuncionario(){
         try {
@@ -313,7 +362,7 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         modelo = (DefaultTableModel)tblComissaoVenda.getModel();
         modelo.setNumRows(0);
         try {
-            comissaovenda = cvSER.listar();
+            comissaovenda = cvSER.listarData(converte.utilSql(dccData.getDate()));
         } catch (ApplicationException ex) {
             ex.printStackTrace();
         }
@@ -324,7 +373,7 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
                 cv.getValor_venda().toString(),
                 cv.getPorcentagem_venda().toString(),
                 cv.getValor_comissao().toString(),
-                cv.getId_funcionario().toString(),
+                cv.getNome(),
                 cv.getTaxa_cartao().toString(),
             });
         }
@@ -354,19 +403,42 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         calculo();
     }//GEN-LAST:event_txtTaxaCartaoFocusLost
 
+    private void tblComissaoVendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblComissaoVendaMouseClicked
+        if(evt.getClickCount()== 2){
+           int linha =  tblComissaoVenda.getSelectedRow();
+           txtIdComissaoVenda.setText(tblComissaoVenda.getValueAt(linha, 0).toString());
+           //dccData.setDate(tblComissaoVenda.getValueAt(linha, 1));
+           txtValorVenda.setText(tblComissaoVenda.getValueAt(linha, 2).toString());
+           txtPorcentagemVenda.setText(tblComissaoVenda.getValueAt(linha, 3).toString());
+           //cmbListaFuncionarios.
+           txtValorComissao.setText(tblComissaoVenda.getValueAt(linha, 4).toString());
+           txtTaxaCartao.setText(tblComissaoVenda.getValueAt(linha, 6).toString());
+        }
+    }//GEN-LAST:event_tblComissaoVendaMouseClicked
+
+    private void btExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btExcluirActionPerformed
+        
+        if(!txtIdComissaoVenda.getText().trim().equals("")){
+            try {
+                cvSER.excluir(Long.parseLong(txtIdComissaoVenda.getText()));
+                carregarTabelaComissaoVenda();
+            } catch (ApplicationException ex) {
+                ex.printStackTrace();
+            }
+        }else{
+            JOptionPane.showMessageDialog(this, "Selecione com 2 cliques o item a ser excluido da tabela");
+        }
+        
+    }//GEN-LAST:event_btExcluirActionPerformed
+
     public void calculo(){
        if(txtValorVenda.getText().trim().equals("")){
             JOptionPane.showMessageDialog(this, "Necessita digitar valor no campo Valor de Venda");
         }else{
             txtValorComissao.setText(formata.doubleParaStringComPontoDeMilhar(Double.parseDouble(String.valueOf(calculo.calculoComissao(Double.parseDouble(formata.convertendoDoubleAmericano(txtValorVenda.getText())),
-                    Double.parseDouble(txtPorcentagemVenda.getText()), Double.parseDouble(txtTaxaCartao.getText()))))));
+                Double.parseDouble(txtPorcentagemVenda.getText()), Double.parseDouble(txtTaxaCartao.getText()))))));
         }
-       try{ 
-            String valor = txtValorVenda.getText();
-            txtValorVenda.setText(formata.doubleParaStringComPontoDeMilhar(Double.parseDouble(valor)));
-       }catch(NumberFormatException ex){     
-           ex.printStackTrace();
-       }
+//            txtValorVenda.setText(formata.doubleParaStringSemPontoDeMilhar(Double.parseDouble(txtValorVenda.getText())));
     }
     
     private void capturarInformcaoes(){
@@ -380,15 +452,14 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         cvDTO.setValor_comissao(Double.parseDouble(formata.convertendoDoubleAmericano(txtValorComissao.getText())));
         
         try {
-            
-            funcionarios = fSER.listarNome();
+            funcionarios = fSER.buscaNome(cmbListaFuncionarios.getSelectedItem().toString());
             for(int i = 0; i < funcionarios.size(); i++){
-                System.out.println(fSER.listarNome().get(i).getId_funcionario());
+                id_funcionario = funcionarios.get(i).getId_funcionario();
+                cvDTO.setId_funcionario(id_funcionario);
             }
-        } catch (ApplicationException ex) {
+            } catch (ApplicationException ex) {
             ex.printStackTrace();
         }
-        
     }
     
     public void limparTela(){
@@ -399,13 +470,26 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
         txtValorVenda.setText("");
         txtTaxaCartao.setText("4.5");
     }
+    
+    private void calculoTotal(Date data){
+        Double valor = 0.0;
+        try {
+            comissaovenda = cvSER.listarData(data);
+            for(int i = 0; i < comissaovenda.size() ; i++){
+                valor += comissaovenda.get(i).getValor_comissao();
+                txtValorTotal.setText(formata.doubleParaStringComPontoDeMilhar(valor));
+            }
+        } catch (ApplicationException ex) {
+            ex.printStackTrace();
+        }
+    }
         
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btAdicionarAlterar;
     private javax.swing.JButton btCancelarLimpar;
+    private javax.swing.JButton btExcluir;
     private javax.swing.JComboBox<String> cmbListaFuncionarios;
     private com.toedter.calendar.JDateChooser dccData;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -413,6 +497,7 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -422,6 +507,7 @@ public class ComissaoVendaGUI extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtPorcentagemVenda;
     private javax.swing.JTextField txtTaxaCartao;
     private javax.swing.JTextField txtValorComissao;
+    private javax.swing.JTextField txtValorTotal;
     private javax.swing.JTextField txtValorVenda;
     // End of variables declaration//GEN-END:variables
 }

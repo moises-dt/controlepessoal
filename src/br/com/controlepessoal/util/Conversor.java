@@ -61,5 +61,10 @@ public class Conversor {
         Date saida = formatador.parse(localdate);
         return saida;
     }
-
+    
+    public java.sql.Date utilSql(Date dataUtil){
+        dataUtil = new java.util.Date();
+        java.sql.Date dataSql = new java.sql.Date(dataUtil.getTime());
+        return dataSql;
+    }
 }

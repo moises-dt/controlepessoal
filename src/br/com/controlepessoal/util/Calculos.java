@@ -1,5 +1,6 @@
 package br.com.controlepessoal.util;
 
+import br.com.controlepessoal.service.ComissaoVendaService;
 import javax.swing.JOptionPane;
 
 /**
@@ -7,6 +8,7 @@ import javax.swing.JOptionPane;
  */
 public class Calculos {
     
+    private ComissaoVendaService cvSER = new ComissaoVendaService();
     private int resultado = 0;
     private double valor = 0.0;
     
@@ -44,4 +46,8 @@ public class Calculos {
          JOptionPane.showMessageDialog(null, "Resultado = "+resultado);
     }
     
+    public double calculoTotal(Double valor){
+        resultado += valor;
+        return resultado;
+    }
 }

@@ -31,4 +31,8 @@ public class FuncionarioService {
     public List<FuncionarioDTO> listarNome() throws ApplicationException {
         return fDAO.listarNome();
     }
+    
+    public List<FuncionarioDTO> buscaNome(String nome) throws ApplicationException {
+        return fDAO.buscaNome(nome);
+    }
 }

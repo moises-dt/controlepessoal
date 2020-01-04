@@ -3,6 +3,7 @@ package br.com.controlepessoal.service;
 import br.com.controlepessoal.dao.ComissaoVendaDAO;
 import br.com.controlepessoal.dto.ComissaoVendaDTO;
 import br.com.controlepessoal.exception.ApplicationException;
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class ComissaoVendaService {
     ComissaoVendaDAO cvDAO = new ComissaoVendaDAO();
     
     public void incluir(ComissaoVendaDTO cv) throws ApplicationException {
-        cvDAO.incluir(cv);
+            cvDAO.incluir(cv);
     }
     
     public void alterar(ComissaoVendaDTO cv) throws ApplicationException {
@@ -26,5 +27,13 @@ public class ComissaoVendaService {
     
     public List<ComissaoVendaDTO> listar() throws ApplicationException {
         return cvDAO.listar();
+    }
+    
+    public List<ComissaoVendaDTO> listarTabela() throws ApplicationException {
+        return cvDAO.listarTabela();
+    }
+    
+    public List<ComissaoVendaDTO> listarData(Date data) throws ApplicationException {
+        return cvDAO.listarData(data);
     }
 }
