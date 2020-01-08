@@ -33,7 +33,7 @@ public class Formatar {
     private SimpleDateFormat formatoAmericano = new SimpleDateFormat("yyyy-MM-dd");
     private SimpleDateFormat formatoAmericano2 = new SimpleDateFormat("yyyyMMdd");
     private DecimalFormat df = new DecimalFormat("R$ ,##0.00");
-    //public NumberFormat porc = NumberFormat.getPercentInstance();
+    private NumberFormat porcentagem = NumberFormat.getPercentInstance();
     private DecimalFormat porc = new DecimalFormat("#0.00");
     
     

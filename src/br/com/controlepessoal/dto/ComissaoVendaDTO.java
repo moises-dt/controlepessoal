@@ -10,22 +10,24 @@ public class ComissaoVendaDTO {
 
     private Long id_comissao_venda;
     private Date data;
-    private Double valor_venda;    
+    private Double valor_venda;
+    private Double entrada;    
     private Double porcentagem_venda;
     private Double valor_comissao;
     private Long id_funcionario;
     private Double taxa_cartao;
     private String nome;
-
+    
     public ComissaoVendaDTO(){
     }
 
     public ComissaoVendaDTO(Long id_comissao_venda, Date data, Double valor_venda,
-            Double porcentagem_venda, Double valor_comissao, Long id_funcionario,
-            Double taxa_cartao, String nome) {
+            Double entrada, Double porcentagem_venda, Double valor_comissao,
+            Long id_funcionario, Double taxa_cartao, String nome) {
         this.id_comissao_venda = id_comissao_venda;
         this.data = data;
         this.valor_venda = valor_venda;
+        this.entrada = entrada;
         this.porcentagem_venda = porcentagem_venda;
         this.valor_comissao = valor_comissao;
         this.id_funcionario = id_funcionario;
@@ -55,6 +57,14 @@ public class ComissaoVendaDTO {
 
     public void setValor_venda(Double valor_venda) {
         this.valor_venda = valor_venda;
+    }
+
+    public Double getEntrada() {
+        return entrada;
+    }
+
+    public void setEntrada(Double entrada) {
+        this.entrada = entrada;
     }
 
     public Double getPorcentagem_venda() {
@@ -97,13 +107,13 @@ public class ComissaoVendaDTO {
         this.nome = nome;
     }
 
-    
     @Override
     public String toString() {
         return "ComissaoVendaDTO{"
                 + "id_comissao_venda=" + id_comissao_venda + ","
                 + "data=" + data + ","
                 + "valor_venda=" + valor_venda + ","
+                + "entrada=" + entrada + ","
                 + "porcentagem_venda=" + porcentagem_venda + ","
                 + "valor_comissao=" + valor_comissao + ","
                 + "id_funcionario=" + id_funcionario + ","

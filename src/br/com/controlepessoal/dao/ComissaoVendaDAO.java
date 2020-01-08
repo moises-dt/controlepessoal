@@ -19,16 +19,15 @@ import java.util.List;
 public class ComissaoVendaDAO extends DataBaseConnection {
     
     private static final String SQL_INSERT = " INSERT INTO comissao_venda(data, valor_venda, porcentagem_venda,"
-            + "valor_comissao, id_funcionario, taxa_cartao)VALUES (?, ?, ?, ?, ?, ?) ";
+            + "valor_comissao, id_funcionario, taxa_cartao, entrada)VALUES (?, ?, ?, ?, ?, ?, ?) ";
     private static final String SQL_UPDATE = " UPDATE comissao_venda SET data=?, valor_venda=?, porcentagem_venda=?,"
-            + "valor_comissao=?, id_funcionario=?, taxa_cartao=? WHERE id_comissao_venda = ? ";
+            + "valor_comissao=?, id_funcionario=?, taxa_cartao=?, entrada=? WHERE id_comissao_venda = ? ";
     private static final String SQL_DELETE = " DELETE FROM comissao_venda WHERE id_comissao_venda=? ";
     private static final String SQL_SELECT_ALL = " SELECT * FROM comissao_venda ";
     private static final String SQL_SELECT_DATA = " SELECT * FROM comissao_venda WHERE data=? ";
     private static final String SQL_SELECT_TABELA = " SELECT cv.id_comissao_venda, cv.data, cv.valor_venda, "
-            + " cv.porcentagem_venda, cv.valor_comissao, f.nome, cv.taxa_cartao FROM comissao_venda AS cv "
-            + " JOIN funcionario AS f ON cv.id_funcionario = f.id_funcionario ORDER BY cv.id_comissao_venda "; 
-    
+            + " cv.entrada, cv.porcentagem_venda, cv.valor_comissao, f.nome, cv.taxa_cartao FROM comissao_venda "
+            + " AS cv JOIN funcionario AS f ON cv.id_funcionario = f.id_funcionario ORDER BY cv.data, cv.id_comissao_venda "; 
     
     private Conversor converte = new Conversor();
     
@@ -49,6 +48,7 @@ public class ComissaoVendaDAO extends DataBaseConnection {
             ps.setDouble(4, cv.getValor_comissao());
             ps.setLong(5, cv.getId_funcionario());
             ps.setDouble(6, cv.getTaxa_cartao());
+            ps.setDouble(7, cv.getEntrada());
             ps.executeUpdate();
         } catch (SQLException ex) {
             throw new ApplicationException("Incluir Comissão de Venda a" + ex.getMessage());
@@ -73,7 +73,8 @@ public class ComissaoVendaDAO extends DataBaseConnection {
             ps.setDouble(4, cv.getValor_comissao());
             ps.setLong(5, cv.getId_funcionario());
             ps.setDouble(6, cv.getTaxa_cartao());
-            ps.setLong(7, cv.getId_comissao_venda());
+            ps.setDouble(7, cv.getEntrada());
+            ps.setLong(8, cv.getId_comissao_venda());
             ps.executeUpdate();
         } catch (SQLException ex) {
             throw new ApplicationException("Alterar Comissão de Venda " + ex.getMessage());
@@ -115,6 +116,7 @@ public class ComissaoVendaDAO extends DataBaseConnection {
                 cv.setValor_comissao(rs.getDouble("valor_comissao"));
                 cv.setId_funcionario(rs.getLong("id_funcionario"));
                 cv.setTaxa_cartao(rs.getDouble("taxa_cartao"));
+                cv.setEntrada(rs.getDouble("entrada"));
                 lista.add(cv);
             }
         } catch (SQLException ex) {
@@ -144,6 +146,7 @@ public class ComissaoVendaDAO extends DataBaseConnection {
                 cv.setValor_comissao(rs.getDouble("valor_comissao"));
                 cv.setId_funcionario(rs.getLong("id_funcionario"));
                 cv.setTaxa_cartao(rs.getDouble("taxa_cartao"));
+                cv.setEntrada(rs.getDouble("entrada"));
                 lista.add(cv);
             }
         } catch (SQLException ex) {
@@ -168,14 +171,16 @@ public class ComissaoVendaDAO extends DataBaseConnection {
                 cv.setId_comissao_venda(rs.getLong("id_comissao_venda"));
                 cv.setData(rs.getDate("data"));
                 cv.setValor_venda(rs.getDouble("valor_venda"));
+                cv.setEntrada(rs.getDouble("entrada"));
                 cv.setPorcentagem_venda(rs.getDouble("porcentagem_venda"));
                 cv.setValor_comissao(rs.getDouble("valor_comissao"));
                 cv.setNome(rs.getString("nome"));
                 cv.setTaxa_cartao(rs.getDouble("taxa_cartao"));
+                
                 lista.add(cv);
             }
         } catch (SQLException ex) {
-            throw new ApplicationException("Listar Comissão de Venda " + ex.getMessage());
+            throw new ApplicationException("Listar Tabela Comissão de Venda " + ex.getMessage());
         } finally {
             close(con, ps, rs);
         }

@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatoriocliente" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a0d6658-9acc-48fc-9837-f3485e57799d">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Detail" forecolor="#000000" backcolor="#FFFFFF">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{id_comissao_venda}.intValue() % 2 != 0]]></conditionExpression>
+			<style mode="Opaque" backcolor="#C0C0C0"/>
+		</conditionalStyle>
+	</style>
+	<queryString>
+		<![CDATA[SELECT cv.id_comissao_venda, cv.data, cv.valor_venda, cv.porcentagem_venda, cv.valor_comissao, f.nome, cv.taxa_cartao
+FROM comissao_venda AS cv JOIN funcionario AS f ON cv.id_funcionario = f.id_funcionario
+ORDER BY cv.data, cv.id_comissao_venda]]>
+	</queryString>
+	<field name="id_comissao_venda" class="java.lang.Long"/>
+	<field name="data" class="java.sql.Date"/>
+	<field name="valor_venda" class="java.lang.Double"/>
+	<field name="porcentagem_venda" class="java.lang.Double"/>
+	<field name="valor_comissao" class="java.lang.Double"/>
+	<field name="nome" class="java.lang.String"/>
+	<field name="taxa_cartao" class="java.lang.Double"/>
+	<variable name="TOTALCOMISSAO" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_comissao}]]></variableExpression>
+	</variable>
+	<variable name="totalvenda" class="java.lang.Double" resetType="Group" resetGroup="funcionario_nome" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_venda}]]></variableExpression>
+	</variable>
+	<variable name="comissaototal" class="java.lang.Double" resetType="Group" resetGroup="funcionario_nome" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_comissao}]]></variableExpression>
+	</variable>
+	<variable name="VENDATOTAL" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{valor_venda}]]></variableExpression>
+	</variable>
+	<group name="funcionario_nome">
+		<groupExpression><![CDATA[$F{data}]]></groupExpression>
+		<groupHeader>
+			<band height="19">
+				<textField>
+					<reportElement mode="Transparent" x="68" y="2" width="223" height="16" uuid="5ce86570-e9cc-4488-9e67-660e917c251c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="false" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="1" y="17" width="554" height="1" uuid="029bcf5f-7bf8-44a0-ba98-2a70e78d32e4"/>
+				</line>
+				<line>
+					<reportElement x="2" y="0" width="554" height="1" uuid="846c893b-6b3e-413a-a646-2816d1b2e55e"/>
+				</line>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="2" y="2" width="66" height="15" forecolor="#000000" backcolor="#FFFFFF" uuid="ddb666f5-60f3-49a1-9778-f8aeae889d4e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="17">
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="346" y="3" width="101" height="14" uuid="bba2eacf-172f-4caf-b448-b07e80160764"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{totalvenda}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="447" y="3" width="106" height="14" uuid="959af6bc-b0ca-4cde-a402-7f5a848714c1"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{comissaototal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="272" y="3" width="73" height="14" uuid="6322117c-88ce-4be2-bf06-34c87c9734b3"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Totais]]></text>
+				</staticText>
+				<line>
+					<reportElement x="1" y="2" width="554" height="1" uuid="78915e30-ec68-45d4-994c-e2f6ab159ff5"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="76" splitType="Stretch">
+			<staticText>
+				<reportElement x="217" y="29" width="317" height="26" uuid="1d8127ba-8b31-4ca1-a7cb-35ab9c63c836"/>
+				<textElement>
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Comissões Gerais por Funcionario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="2" width="247" height="35" uuid="7c8fa9c4-5c15-42a4-8b9d-f2366de8a8cb"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Controle de Pessoal]]></text>
+			</staticText>
+			<frame>
+				<reportElement mode="Opaque" x="0" y="55" width="556" height="20" backcolor="#CCCCCC" uuid="1fbf7a79-f24b-45fa-a425-5c450a2dba5c"/>
+				<staticText>
+					<reportElement x="2" y="0" width="66" height="20" uuid="0522fc5a-7625-4195-998c-3de54df1d148"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Data]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="344" y="0" width="100" height="20" uuid="0440e845-a87d-4355-8357-cdf38bd25c13"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor da Venda]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="444" y="0" width="108" height="20" uuid="55fdc0ec-3186-4f92-9fc7-4b5266120343"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Valor da Comissão]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="68" y="2" width="142" height="18" uuid="d1741073-4c05-40e8-852f-8112078cfe5c"/>
+					<textElement verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Vendedor]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="284" y="0" width="62" height="20" uuid="7a11e312-5236-4e3f-9419-685491710bc9"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Comissão]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="210" y="0" width="62" height="20" uuid="6d2ee5cc-9402-47d8-8d46-7f959b48aa6e"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<text><![CDATA[Taxa Cartão]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Detail" x="0" y="0" width="556" height="15" uuid="c949eee7-7078-49b7-b2a8-91f0c97bbb70"/>
+			</frame>
+			<textField pattern="#,## %" isBlankWhenNull="true">
+				<reportElement x="284" y="0" width="61" height="15" uuid="88b7aad7-8d10-4b6e-97de-79dd7c22c97b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{porcentagem_venda}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="346" y="-1" width="100" height="16" uuid="0e61d8d4-e7da-45c9-b097-83c0de3737a2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{valor_venda}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="445" y="-1" width="108" height="16" uuid="c359e618-be16-4b1f-83d5-bcdb76880cde"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{valor_comissao}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,## %" isBlankWhenNull="true">
+				<reportElement x="210" y="0" width="74" height="15" uuid="55044a2b-2d09-4389-b679-e98ec8575f6a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{taxa_cartao}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="25">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="2" y="5" width="131" height="20" uuid="cc1a18ff-6de2-41e7-9bf3-8b2cee06aee9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="137" y="5" width="80" height="20" uuid="85a796b2-5846-499b-99bb-ec6f2e24b166"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Paginas "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="217" y="5" width="40" height="20" uuid="1dfe13d0-b516-45db-a357-1c4d7d693dbb"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="447" y="5" width="106" height="20" uuid="0655e2dc-e561-4dc3-b80c-c63c070a15a5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{TOTALCOMISSAO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="272" y="5" width="73" height="20" uuid="20b1d033-155d-4292-8902-eecc4a273289"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Totais Geral]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="4" width="554" height="1" uuid="479fb50e-0a24-4158-8100-f9f16d8e6e38"/>
+			</line>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="346" y="5" width="101" height="20" uuid="5105ae84-5a17-4d82-880b-c0a450e42f9d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{VENDATOTAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch"/>
+	</summary>
+</jasperReport>

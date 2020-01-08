@@ -1,12 +1,15 @@
 package br.com.controlepessoal.gui;
 
+import br.com.controlepessoal.service.RelatoriosService;
 import javax.swing.JInternalFrame;
 
 /**
  * @author MDiasT
  */
 public class PrincipalGUI extends javax.swing.JFrame {
-
+    
+    RelatoriosService rSER = new RelatoriosService();
+    
     /**
      * Creates new form PrincipalGUI
      */
@@ -32,6 +35,8 @@ public class PrincipalGUI extends javax.swing.JFrame {
         jMenu3 = new javax.swing.JMenu();
         MenuCadastroComissao = new javax.swing.JMenuItem();
         jMenu4 = new javax.swing.JMenu();
+        MenuComissaoCompleto = new javax.swing.JMenuItem();
+        MenuComissaoResumida = new javax.swing.JMenuItem();
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -65,7 +70,24 @@ public class PrincipalGUI extends javax.swing.JFrame {
 
         jMenuBar2.add(jMenu3);
 
-        jMenu4.setText("Edit");
+        jMenu4.setText("Relatórios");
+
+        MenuComissaoCompleto.setText("Comissão de Venda");
+        MenuComissaoCompleto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuComissaoCompletoActionPerformed(evt);
+            }
+        });
+        jMenu4.add(MenuComissaoCompleto);
+
+        MenuComissaoResumida.setText("Comissao Resumida Mês");
+        MenuComissaoResumida.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuComissaoResumidaActionPerformed(evt);
+            }
+        });
+        jMenu4.add(MenuComissaoResumida);
+
         jMenuBar2.add(jMenu4);
 
         setJMenuBar(jMenuBar2);
@@ -88,6 +110,14 @@ public class PrincipalGUI extends javax.swing.JFrame {
         ComissaoVendaGUI cv = new ComissaoVendaGUI();
         chamarTela(cv);
     }//GEN-LAST:event_MenuCadastroComissaoActionPerformed
+
+    private void MenuComissaoCompletoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuComissaoCompletoActionPerformed
+        rSER.relatorioComissao();
+    }//GEN-LAST:event_MenuComissaoCompletoActionPerformed
+
+    private void MenuComissaoResumidaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuComissaoResumidaActionPerformed
+        rSER.relatorioComissaoResumida();
+    }//GEN-LAST:event_MenuComissaoResumidaActionPerformed
 
     public void chamarTela(JInternalFrame p) {
         DesktopPane.add(p);
@@ -137,6 +167,8 @@ public class PrincipalGUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane DesktopPane;
     private javax.swing.JMenuItem MenuCadastroComissao;
+    private javax.swing.JMenuItem MenuComissaoCompleto;
+    private javax.swing.JMenuItem MenuComissaoResumida;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;

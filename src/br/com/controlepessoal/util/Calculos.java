@@ -15,30 +15,28 @@ public class Calculos {
     public int somar (int n1, int n2){
         resultado = n1 + n2;
         return resultado;
-        
     }
       
     public int subtrair (int n1, int n2){
         resultado = n1 - n2;
         return resultado;
-        
     }
     
     public int dividir (int n1, int n2){
         resultado = n1 / n2;
         return resultado;
-             
     }
     public int multiplicar (int n1, int n2){
         resultado = n1 * n2;
         return resultado;
-        
     }
     
-    public double calculoComissao(double valorvenda, double porcentagemcomissao, double taxacartao){
+    public double calculoComissao(double valorvenda, double porcentagemcomissao, double taxacartao, double entrada){
         double desconto = 0.0;
-        desconto = valorvenda - (valorvenda * (taxacartao/100));
-        valor = desconto * (porcentagemcomissao/100);
+        desconto = (valorvenda - entrada) - (valorvenda * (taxacartao/100));
+        System.out.println(desconto);
+        valor = (desconto + entrada) * (porcentagemcomissao/100);
+        System.out.println(valor);
         return valor;
     }
     
