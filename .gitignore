@@ -23,6 +23,6 @@
 hs_err_pid*
 
 # Pastas
-controleempresa/dist/
-controleempresa/lib/
-controleempresa/test/
+ControlePessoal/dist/
+ControlePessoal/lib/
+ControlePessoal/test/
